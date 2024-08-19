@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const Employee = require("../models/Employee");
 const Birthday = require("../models/Birthday");
 const WorkAnniversary = require("../models/WorkAnniversary");
+const Profile = require("../models/Profile");
 const router = express.Router();
 
 // CREATE a new employee
@@ -70,8 +71,12 @@ router.post("/", async (req, res) => {
       uanNumber,
       password,
     });
-    // console.log('newEmployee: ', newEmployee);
 
+    const profileDetails = new Profile({
+      empDbId: newEmployee._id,
+      employeeId,
+      employee: `${name} - ${employeeId}`,
+    });
     const birthdayDetails = new Birthday({
       empDbId: newEmployee._id,
       employeeId,
@@ -91,12 +96,14 @@ router.post("/", async (req, res) => {
 
     // Save the employee to the database
     const employee = await newEmployee.save();
+    const profile = await profileDetails.save();
     const bithdays = await birthdayDetails.save();
     const workAnniversary = await workAnniversaryDetails.save();
 
     res.status(201).json({
       message: "Employee created successfully",
       employee,
+      profile,
       bithdays,
       workAnniversary,
     });

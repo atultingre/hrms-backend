@@ -22,6 +22,7 @@ const validateObjectId = (req, res, next) => {
 };
 
 // Create or Update Profile Picture
+// Create or Update Profile Picture
 router.post(
   "/:employeeId/picture",
   validateObjectId,
@@ -38,6 +39,19 @@ router.post(
       // Initialize profileDetails if it does not exist
       if (!employee.profileDetails) {
         employee.profileDetails = {};
+      }
+
+      // Check if there is an existing profile picture
+      const oldProfilePictureUrl = employee.profileDetails.profilePicture;
+      if (oldProfilePictureUrl) {
+        // Extract the file name from the URL
+        const oldFileName = decodeURIComponent(
+          oldProfilePictureUrl.split("/o/")[1].split("?")[0]
+        );
+        const oldFile = bucket.file(oldFileName);
+
+        // Delete the old profile picture from Firebase Storage
+        await oldFile.delete();
       }
 
       const file = req.file;
@@ -61,7 +75,7 @@ router.post(
           bucket.name
         }/o/${encodeURIComponent(fileUpload.name)}?alt=media`;
 
-        // Store the URL in the profileDetailsSchema
+        // Store the new URL in the profileDetailsSchema
         employee.profileDetails.profilePicture = publicUrl;
 
         // Update Birthday and WorkAnniversary models

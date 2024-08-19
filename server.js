@@ -17,7 +17,7 @@ const app = express();
 // Middleware
 app.use(
   cors({
-    origin: ["*", "http://localhost:3000", "http://192.168.0.106:5173"], 
+    origin: ["*", "http://localhost:3000", "http://192.168.0.106:5173","http://localhost:5173"], 
     methods: "GET,POST,PUT,DELETE",
     allowedHeaders: "Content-Type,Authorization",
   })
@@ -41,5 +41,6 @@ app.use("/api/profile", profileDetailsRoutes);
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(` http://192.168.0.106:${PORT}`);
+  // console.log(` http://192.168.0.106:${PORT}`);
+  console.log(` http://localhost:${PORT}`);
 });

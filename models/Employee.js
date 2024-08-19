@@ -123,11 +123,12 @@ const personalDetailsSchema = new Schema({
 });
 
 const profileDetailsSchema = new Schema({
+  employee: { type: String },
   profilePicture: {
     type: String,
     default: null,
   },
-  linkedinLink: { type: String },
+  linkedinLink: { type: String, default: null },
 });
 
 const statutoryDetailsSchema = new Schema({
